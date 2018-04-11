@@ -119,10 +119,28 @@ class CloudingThingsGroveAccelerometer16G(CloudingThingsGroveSensor):
 
     def _read(self):
         data={}
-        axes = adxl345.getAxes(True)
+        axes = self._adxl345.getAxes(True)
         data['x']=axes['x']
         data['y']=axes['y']
         data['z']=axes['z']
+        return data
+
+
+class CloudingThingsGroveBarometerBmp085(CloudingThingsGroveSensor):
+
+    _barometer=None
+
+    def _init_sensor(self):
+        import grove_barometer_lib
+        self._barometer=grove_barometer_lib.barometer()
+
+
+    def _read(self):
+        data={}
+        self._barometer.update
+        data['temperature']=self._barometer.temperature
+        data['pressure']=self._barometer.pressure
+        data['altitude']=self._barometer.altitude
         return data
 
 
