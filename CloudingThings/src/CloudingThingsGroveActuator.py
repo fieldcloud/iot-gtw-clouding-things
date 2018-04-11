@@ -111,6 +111,46 @@ class CloudingThingsGroveLed(CloudingThingsGroveActuator):
                     grovepi.digitalWrite(self._pin, v)
 
 
+class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
+
+
+    @inlineCallbacks
+    def _init_actuator(self):
+        grovepi.pinMode(self._pin, 'OUTPUT')
+        yield grovepi.digitalWrite(self._pin, 0)
+        yield sleep(1.0)
+        yield grovepi.digitalWrite(self._pin, 1)
+        yield sleep(1.0)
+        yield grovepi.digitalWrite(self._pin, 0)
+
+
+    def do(self, action):
+        if action is not None:
+            for k, v in action.iteritems():
+                if k == 'state':
+                    grovepi.digitalWrite(self._pin, v)
+
+
+class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
+
+
+    @inlineCallbacks
+    def _init_actuator(self):
+        grovepi.pinMode(self._pin, 'OUTPUT')
+        yield grovepi.digitalWrite(self._pin, 0)
+        yield sleep(1.0)
+        yield grovepi.digitalWrite(self._pin, 1)
+        yield sleep(1.0)
+        yield grovepi.digitalWrite(self._pin, 0)
+
+
+    def do(self, action):
+        if action is not None:
+            for k, v in action.iteritems():
+                if k == 'state':
+                    grovepi.digitalWrite(self._pin, v)
+
+
 class CloudingThingsGroveOled(CloudingThingsGroveActuator):
 
 

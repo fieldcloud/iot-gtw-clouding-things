@@ -108,6 +108,24 @@ class CloudingThingsGroveUltrasonic(CloudingThingsGroveSensor):
         return data
 
 
+class CloudingThingsGroveAccelerometer16G(CloudingThingsGroveSensor):
+
+    _adxl1345=None
+
+    def _init_sensor(self):
+        from adxl345 import ADXL345
+        self._adxl345 = ADXL345()
+
+
+    def _read(self):
+        data={}
+        axes = adxl345.getAxes(True)
+        data['x']=axes['x']
+        data['y']=axes['y']
+        data['z']=axes['z']
+        return data
+
+
 class CloudingThingsGroveGas(CloudingThingsGroveSensor):
 
 
