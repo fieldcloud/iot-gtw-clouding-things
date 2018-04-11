@@ -144,6 +144,29 @@ class CloudingThingsGrovePotentiometer(CloudingThingsGroveSensor):
         return data
 
 
+class CloudingThingsGroveElectricity(CloudingThingsGroveSensor):
+
+    _vcc=5.0
+
+
+    def _init_sensor(self):
+        try:
+            grovepi.pinMode(self._pin,"INPUT")
+        except:
+            pass
+
+
+    def _read(self):
+        data={}
+        sensor_value=grovepi.analogRead(self._pin)
+        amplitude = float(sensor_value) / 1024.0 * _vcc / 800.0 * 2000000.0
+        effective = amplitude_current / 1.414
+        data['measurement']=sensor_value
+        data['amplitude']=amplitude
+        data['effective']=effective
+        return data
+
+
 class CloudingThingsGroveLight(CloudingThingsGroveSensor):
 
 
@@ -174,6 +197,38 @@ class CloudingThingsGroveMoisture(CloudingThingsGroveSensor):
     def _read(self):
         data={}
         data['moisture']=grovepi.analogRead(self._pin)
+        return data
+
+
+class CloudingThingsGrovePiezo(CloudingThingsGroveSensor):
+
+
+    def _init_sensor(self):
+        try:
+            grovepi.pinMode(self._pin,"INPUT")
+        except:
+            pass
+
+
+    def _read(self):
+        data={}
+        data['vibrating']=grovepi.analogRead(self._pin)
+        return data
+
+
+class CloudingThingsGrovePirMotion(CloudingThingsGroveSensor):
+
+
+    def _init_sensor(self):
+        try:
+            grovepi.pinMode(self._pin,"INPUT")
+        except:
+            pass
+
+
+    def _read(self):
+        data={}
+        data['motion']=grovepi.digitalRead(self._pin)
         return data
 
 

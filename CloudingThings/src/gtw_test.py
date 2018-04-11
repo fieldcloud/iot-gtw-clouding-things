@@ -12,6 +12,7 @@ from CloudingThingsGroveSensor import CloudingThingsGroveDhtPro
 from CloudingThingsGroveActuator import CloudingThingsGroveLcd
 from CloudingThingsGroveActuator import CloudingThingsGroveLedbar
 from CloudingThingsGroveActuator import CloudingThingsGroveOled
+from CloudingThingsGroveActuator import CloudingThingsGroveLed
 
 
 gtw_config={
@@ -30,12 +31,13 @@ if __name__ == "__main__":
     #Actuators
     ct_gtw.add_actuator(CloudingThingsGroveLcd('lcd', 0))
     ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', 7))
-    ct_gtw.add_actuator(CloudingThingsGroveOled('ledbar', 0))
+    ct_gtw.add_actuator(CloudingThingsGroveOled('oled', 0))
+    ct_gtw.add_actuator(CloudingThingsGroveLed('led', 8))
     #Sensors
     ct_gtw.add_sensor(CloudingThingsGroveUltrasonic(1.0, 'ultrasonic',4))
     ct_gtw.add_sensor(CloudingThingsGroveGas(10.0, 'gas',1))
     ct_gtw.add_sensor(CloudingThingsGroveLight(9.0, 'light',2))
-    ct_gtw.add_sensor(CloudingThingsGrovePotentiometer(0.5, 'potentiometer',0))
+    ct_gtw.add_sensor(CloudingThingsGrovePotentiometer(6.0, 'potentiometer',0))
     ct_gtw.add_sensor(CloudingThingsGroveMoisture(5.0, 'moisture',2))
     ct_gtw.add_sensor(CloudingThingsGroveDht(1.0, 'dht',5))
     ct_gtw.add_sensor(CloudingThingsGroveDhtPro(1.5, 'dht pro', 6))
