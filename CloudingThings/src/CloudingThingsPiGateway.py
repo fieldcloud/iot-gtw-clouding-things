@@ -79,6 +79,7 @@ class CloudingThingsPiGateway(object):
     def add_sensor(self, sensor):
         if sensor is not None:
             self._sensors[sensor.get_serial()]=sensor
+            sensor.link_to_gateway(self)
 
 
     def add_actuator(self, actuator):

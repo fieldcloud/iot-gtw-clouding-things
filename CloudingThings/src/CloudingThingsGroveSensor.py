@@ -37,19 +37,17 @@ from datetime import datetime
 
 class CloudingThingsGroveSensor(object):
 
-    _clouding_things_client=None
+    _clouding_things_gtw=None
     _period = 5.0
     _serial='Generic'
     _pin=0
 
 
-    def __init__(self, gateway, period, serial, pin):
-        self._clouding_things_gtw=gateway
+    def __init__(self, period, serial, pin):
         self._period=period
         self._serial=serial
         self._pin=pin
         self._init_sensor()
-        gateway.add_sensor(self)
         reactor.callWhenRunning(self._start)
         logging.info('{} Sensor {} started'.format(datetime.now(),
                                                    self._serial))
@@ -57,6 +55,10 @@ class CloudingThingsGroveSensor(object):
 
     def get_serial(self):
         return self._serial
+
+
+    def link_to_gateway(self, gateway):
+        self._clouding_things_gtw=gateway
 
 
     def _init_sensor(self):
@@ -122,6 +124,40 @@ class CloudingThingsGroveGas(CloudingThingsGroveSensor):
         data['gas_measurement']=sensor_value
         gas_density = float(sensor_value) / 1024.0
         data['gas_density'] = gas_density
+        return data
+
+
+class CloudingThingsGrovePotentiometer(CloudingThingsGroveSensor):
+
+
+    def _init_sensor(self):
+        try:
+            grovepi.pinMode(self._pin,"INPUT")
+        except:
+            pass
+
+
+    def _read(self):
+        data={}
+        sensor_value=grovepi.analogRead(self._pin)
+        data['potentiometer']=sensor_value
+        return data
+
+
+class CloudingThingsGroveLight(CloudingThingsGroveSensor):
+
+
+    def _init_sensor(self):
+        try:
+            grovepi.pinMode(self._pin,"INPUT")
+        except:
+            pass
+
+
+    def _read(self):
+        data={}
+        sensor_value=grovepi.analogRead(self._pin)
+        data['light']=sensor_value
         return data
 
 
