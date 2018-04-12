@@ -14,7 +14,7 @@ from twisted.internet import reactor
 import json
 
 '''
-
+    
 '''
 
 __version__='0.1.0'
@@ -100,8 +100,22 @@ class CloudingThingsPiGateway(object):
        '''
            The callback for when a PUBLISH message is received from the server.
        '''
-       print 'received'
-       print msg
+       if msg.get('type') == "TH_setActuator":
+           if msg.get('gatewayId') == self._params.get('serial'):
+               actions=msg.get('payload')
+               for action in actions:
+                   self._execute(action)
+
+
+    def _execute(self, action):
+        ids=action.get('deviceId').split('-')
+        if len(ids) == 2:
+            id=ids[1]
+            actuator=self._actuators.get(id)
+            if actuator is not None:
+                a={}
+                a[actuator.get('outputName')]=actuator.get('value')
+                actuator.do(a)
 
 
     def on_disconnect(self, cl, userdata, rc):

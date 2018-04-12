@@ -1,7 +1,7 @@
 Metadata-Version: 1.1
 Name: CloudingThings4Pi
-Version: 0.1.1
-Summary: Python library used to easily a Raspberry Pi into an IoT gateway combining grove sensors & Clouding things use case prototyping platform
+Version: 0.2.0
+Summary: Python library used to easily develop an IoT gateway based on RaspBerry Pi and Dexter Grove Pi sensor board connected to Clouding Things use cases prototyping platform
 Home-page: https://github.com/fieldcloud/iot-gtw-clouding-things
 Author: fieldcloud SAS
 Author-email: contact@fieldcloud.com

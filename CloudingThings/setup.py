@@ -1,4 +1,4 @@
-#!/usr/bin/python #!/usr/bin/env python
+#!/usr/bin/env python
 
 try:
     with open('package_description.rst', 'r') as file_description:
@@ -8,14 +8,16 @@ except IOError:
 
 from setuptools import setup, find_packages
 
+import CloudingThings4Pi
+
 setup(
     name = "CloudingThings4Pi",
-    version = "0.1.1",
+    version = "0.2.0",
 
-    description = "Python library used to easily a Raspberry Pi "\
-                  "into an IoT gateway "\
-                  "combining grove sensors & Clouding things use case "\
-                  "prototyping platform",
+    description = "Python library used to easily develop an IoT gateway "\
+                  "based on RaspBerry Pi and Dexter Grove Pi sensor board "\
+                  "connected to Clouding Things use cases prototyping "\
+                  "platform",
     long_description = description,
 
     author = "fieldcloud SAS",

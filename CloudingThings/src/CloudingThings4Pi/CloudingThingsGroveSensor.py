@@ -3,28 +3,34 @@
 # 
 
 '''
-The MIT License (MIT)
 
-GrovePi for the Raspberry Pi: an open source platform for connecting Grove Sens$
-Copyright (C) 2017  Dexter Industries
+    CloudingThingsGroveSensor Module
+    ==============================
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Usage:
+        Create grove sensor for IoT Gateway connected to Clouding Things
+        use case prototyping platform
+    License: MIT
+    Contributors:
+        Jean Poma - Initial development
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+    ==============================
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+    Example:
+        import CloudingThings4Pi.CloudingThingsPiGateway as ctpg
+        from CloudingThings4Pi.CloudingThingsGroveSensor import *
+        gtw_config={
+           'client': 'demo',
+           'serial': 'demo',
+           'credential_file': 'path_to_crt.crt',
+           'broker': '5.135.83.28',
+           'transport': 'ssl',
+           'port': 8883,
+           'auto_reconnect': True
+        }
+        ct_gtw=ctpg.CloudingThingsPiGateway(gtw_config)
+        ct_gtw.add_sensor(CloudingThingsGroveGas(10.0, 'gas',1))
+        ct_gtw.run()
 '''
 
 import grovepi
@@ -37,6 +43,11 @@ from datetime import datetime
 
 class CloudingThingsGroveSensor(object):
 
+    '''
+        Abstract class managing sensor initialization, link to gateway and 
+        data publishment
+    '''
+
     _clouding_things_gtw=None
     _period = 5.0
     _serial='Generic'
@@ -44,6 +55,12 @@ class CloudingThingsGroveSensor(object):
 
 
     def __init__(self, period, serial, pin):
+        '''
+            Initialize sensor parameters:
+                period -- time between 2 data readings
+                serial -- Clouding Things sensor serial number
+                pin -- pin attached to sensor
+        '''
         self._period=period
         self._serial=serial
         self._pin=pin
@@ -54,10 +71,12 @@ class CloudingThingsGroveSensor(object):
 
 
     def get_serial(self):
+        ''' Return sensor Clouding Things serial number '''
         return self._serial
 
 
     def link_to_gateway(self, gateway):
+        ''' Add sensor to the gateway '''
         self._clouding_things_gtw=gateway
 
 
@@ -96,6 +115,7 @@ class CloudingThingsGroveSensor(object):
 
 class CloudingThingsGroveUltrasonic(CloudingThingsGroveSensor):
 
+    '''Ultrasonic ranger sensor'''
 
     def _read(self):
         data={}
@@ -109,6 +129,8 @@ class CloudingThingsGroveUltrasonic(CloudingThingsGroveSensor):
 
 
 class CloudingThingsGroveAccelerometer16G(CloudingThingsGroveSensor):
+
+    '''Accelerometer 16g sensor'''
 
     _adxl1345=None
 
@@ -128,6 +150,8 @@ class CloudingThingsGroveAccelerometer16G(CloudingThingsGroveSensor):
 
 class CloudingThingsGroveBarometerBmp085(CloudingThingsGroveSensor):
 
+    '''Barometer Bmp085 sensor'''
+
     _barometer=None
 
     def _init_sensor(self):
@@ -146,6 +170,7 @@ class CloudingThingsGroveBarometerBmp085(CloudingThingsGroveSensor):
 
 class CloudingThingsGroveGas(CloudingThingsGroveSensor):
 
+    '''Gas sensor'''
 
     def _init_sensor(self):
         try:
@@ -165,6 +190,7 @@ class CloudingThingsGroveGas(CloudingThingsGroveSensor):
 
 class CloudingThingsGrovePotentiometer(CloudingThingsGroveSensor):
 
+    '''Potentiometer sensor'''
 
     def _init_sensor(self):
         try:
@@ -181,6 +207,8 @@ class CloudingThingsGrovePotentiometer(CloudingThingsGroveSensor):
 
 
 class CloudingThingsGroveElectricity(CloudingThingsGroveSensor):
+
+    '''Electricity sensor'''
 
     _vcc=5.0
 
@@ -205,6 +233,7 @@ class CloudingThingsGroveElectricity(CloudingThingsGroveSensor):
 
 class CloudingThingsGroveLight(CloudingThingsGroveSensor):
 
+    '''Light sensor'''
 
     def _init_sensor(self):
         try:
@@ -222,6 +251,7 @@ class CloudingThingsGroveLight(CloudingThingsGroveSensor):
 
 class CloudingThingsGroveMoisture(CloudingThingsGroveSensor):
 
+    '''Moisture sensor'''
 
     def _init_sensor(self):
         try:
@@ -238,6 +268,7 @@ class CloudingThingsGroveMoisture(CloudingThingsGroveSensor):
 
 class CloudingThingsGrovePiezo(CloudingThingsGroveSensor):
 
+    '''Piezo sensor'''
 
     def _init_sensor(self):
         try:
@@ -254,6 +285,7 @@ class CloudingThingsGrovePiezo(CloudingThingsGroveSensor):
 
 class CloudingThingsGrovePirMotion(CloudingThingsGroveSensor):
 
+    '''Pir motion sensor'''
 
     def _init_sensor(self):
         try:
@@ -270,6 +302,7 @@ class CloudingThingsGrovePirMotion(CloudingThingsGroveSensor):
 
 class CloudingThingsGroveDht(CloudingThingsGroveSensor):
 
+    '''Dht Temperature & Humidity sensor'''
 
     def _init_sensor(self):
         try:
@@ -288,6 +321,7 @@ class CloudingThingsGroveDht(CloudingThingsGroveSensor):
 
 class CloudingThingsGroveDhtPro(CloudingThingsGroveSensor):
 
+    '''Dht Pro Temperature & Humidity sensor'''
 
     def _init_sensor(self):
         try:
