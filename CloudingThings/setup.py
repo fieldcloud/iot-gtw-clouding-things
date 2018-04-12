@@ -6,11 +6,11 @@ try:
 except IOError:
     description = "https://github.com/fieldcloud/iot-gtw-clouding-things"
 
-import setuptools
+from setuptools import setup, find_packages
 
-setuptools.setup(
+setup(
     name = "CloudingThings4Pi",
-    version = "0.1.0",
+    version = "0.1.1",
 
     description = "Python library used to easily a Raspberry Pi "\
                   "into an IoT gateway "\
@@ -37,6 +37,7 @@ setuptools.setup(
     keywords = ['iot', 'grove', 'internet of things', 'prototyping',
                 'clouding things', 'fieldcloud'],
 
-    py_modules = ['CloudingThings4Pi'],
-    install_requires = ['grovepi', 'paho']
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    install_requires = ['grovepi', 'paho-mqtt', 'twisted']
 )

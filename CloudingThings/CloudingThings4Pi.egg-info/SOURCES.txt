@@ -1,0 +1,7 @@
+setup.cfg
+setup.py
+CloudingThings4Pi.egg-info/PKG-INFO
+CloudingThings4Pi.egg-info/SOURCES.txt
+CloudingThings4Pi.egg-info/dependency_links.txt
+CloudingThings4Pi.egg-info/requires.txt
+CloudingThings4Pi.egg-info/top_level.txt

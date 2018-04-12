@@ -1,8 +1,18 @@
 #!/usr/bin/env python
 
-import CloudingThings4Pi.CloudingThingsPiGateway as ctpg
-from CloudingThings4Pi.CloudingThingsGroveSensor import *
-from CloudingThings4Pi.CloudingThingsGroveActuator import *
+from CloudingThingsPiGateway import CloudingThingsPiGateway
+#import CloudingThingsGatewayRunner as gr
+from CloudingThingsGroveSensor import CloudingThingsGroveUltrasonic
+from CloudingThingsGroveSensor import CloudingThingsGroveGas
+from CloudingThingsGroveSensor import CloudingThingsGroveMoisture
+from CloudingThingsGroveSensor import CloudingThingsGroveDht
+from CloudingThingsGroveSensor import CloudingThingsGroveLight
+from CloudingThingsGroveSensor import CloudingThingsGrovePotentiometer
+from CloudingThingsGroveSensor import CloudingThingsGroveDhtPro
+from CloudingThingsGroveActuator import CloudingThingsGroveLcd
+from CloudingThingsGroveActuator import CloudingThingsGroveLedbar
+from CloudingThingsGroveActuator import CloudingThingsGroveOled
+from CloudingThingsGroveActuator import CloudingThingsGroveLed
 
 
 gtw_config={
@@ -17,7 +27,7 @@ gtw_config={
 
 if __name__ == "__main__":
     #Gateway
-    ct_gtw=ctpg.CloudingThingsPiGateway(gtw_config)
+    ct_gtw=CloudingThingsPiGateway(gtw_config)
     #Actuators
     ct_gtw.add_actuator(CloudingThingsGroveLcd('lcd', 0))
     ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', 7))
