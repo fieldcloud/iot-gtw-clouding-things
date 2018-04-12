@@ -11,6 +11,7 @@ import paho.mqtt.publish as publish
 import ssl
 import time
 from twisted.internet import reactor
+from twisted.internet import defer
 import json
 
 '''
@@ -127,6 +128,7 @@ class CloudingThingsPiGateway(object):
         self._mqtt_client.subscribe(self._subscription)
 
 
+    @defer.inlineCallbacks
     def on_message(self, cl, userdata, msg):
        '''
            The callback for when a PUBLISH message is received from the server.
@@ -136,9 +138,10 @@ class CloudingThingsPiGateway(object):
            if msg.get('gatewayId') == self._params.get('serial'):
                actions=msg.get('payload')
                for action in actions:
-                   self._execute(action)
+                   yield self._execute(action)
 
 
+    @defer.inlineCallbacks
     def _execute(self, action):
         ids=action.get('deviceId').split('-')
         if len(ids) == 2:
@@ -147,7 +150,7 @@ class CloudingThingsPiGateway(object):
             if actuator is not None:
                 a={}
                 a[actuator.get('outputName')]=actuator.get('value')
-                actuator.do(a)
+                yield actuator.do(a)
 
 
     def on_disconnect(self, cl, userdata, rc):
@@ -203,6 +206,7 @@ class CloudingThingsPiGateway(object):
 
 
 #publish
+    @defer.inlineCallbacks
     def publish(self, data):
         '''
             Publish data received from sensor on mqtt topic
@@ -214,7 +218,7 @@ class CloudingThingsPiGateway(object):
             print payload
             print self._topic
             if self._mqtt_client is not None:
-                print self._mqtt_client.publish(self._topic, payload=payload)
+                yield self._mqtt_client.publish(self._topic, payload=payload)
         except Exception as e:
             logging.warning('{} - Impossible to publish message with error: {}'\
                   ''.format(datetime.now(), str(e.args).strip('(),\"')))
@@ -248,5 +252,3 @@ class CloudingThingsPiGateway(object):
         '''
         reactor.callWhenRunning(self.start_mqtt_client)
         reactor.run()
-
-
