@@ -38,6 +38,7 @@ import CloudingThings4Pi.AsynchGrovePi as grovepi
 import CloudingThingsPiGateway
 from twisted.internet import reactor
 from twisted.internet import defer
+from twisted.internet import task
 import logging
 from datetime import datetime
 
@@ -89,8 +90,13 @@ class CloudingThingsGroveSensor(object):
         pass
 
 
-    @defer.inlineCallbacks
     def _start(self):
+        l = task.LoopingCall(self._run)
+        l.start(self._period)
+
+
+    @defer.inlineCallbacks
+    def _run(self):
         '''
             Manage sensor data acquisition and publication
         '''
@@ -103,7 +109,6 @@ class CloudingThingsGroveSensor(object):
             msg='{} Error publishing to Clouding Things client: {}'\
                 ''.format(datetime.now(), str(e.args).strip('(),\"'))
             logging.warning(result.get('msg'))
-        reactor.callLater(self._period, self._start)
 
 
     def _read(self):

@@ -93,7 +93,6 @@ class CloudingThingsGroveLedbar(CloudingThingsGroveActuator):
 
     '''Ledbar actuator'''
 
-    @inlineCallbacks
     def _init_actuator(self):
         grovepi.ledBar_init(self._pin, 0)
         sleep(0.5)
@@ -127,16 +126,20 @@ class CloudingThingsGroveLed(CloudingThingsGroveActuator):
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
                 elif k == 'blink':
-#                    self._blink(float(v), 1)
-                    reactor.callLater(1.0, self._blink, 1)
+                    self._blinking=True
+                    self._blinking_period=float(v)
+                    self._blink()
+#                    reactor.callLater(1.0, self._blink, 1)
 
 
-    def _blink(self, state):
-        grovepi.digitalWrite(self._pin, state)
-        if state == 0:
-            state=1
-        else:
-            state=0
+    @inlineCallbacks
+    def _blink(self):
+        while self._blinking==True:
+            grovepi.digitalWrite(self._pin, 1)
+            yield sleep(self._blinking_period)
+            grovepi.digitalWrite(self._pin, 0)
+            yield sleep(self._blinking_period)
+
 
 
 class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
