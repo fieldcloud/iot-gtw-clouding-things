@@ -122,11 +122,23 @@ class CloudingThingsGroveLed(CloudingThingsGroveActuator):
         yield grovepi.digitalWrite(self._pin, 0)
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
+            self._blinking=False
             for k, v in action.iteritems():
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
+                elif k == 'blink':
+                    yield self._blink(v)
+
+
+    @inlineCallbacks
+    def _blink(self, duration):
+        grovepi.digitalWrite(self._pin, 1)
+        yield sleep(duration)
+        grovepi.digitalWrite(self._pin, 0)
+        reactor.callLater(duration, self._blink, duration)
 
 
 class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
@@ -143,11 +155,12 @@ class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
         yield grovepi.digitalWrite(self._pin, 0)
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
-                    grovepi.digitalWrite(self._pin, v)
+                    yield grovepi.digitalWrite(self._pin, v)
 
 
 class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
@@ -164,19 +177,21 @@ class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
         yield grovepi.digitalWrite(self._pin, 0)
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
-                    grovepi.digitalWrite(self._pin, v)
+                    yield grovepi.digitalWrite(self._pin, v)
 
 
 class CloudingThingsGroveOled(CloudingThingsGroveActuator):
 
     '''Oled actuator'''
 
+    @inlineCallbacks
     def _init_actuator(self):
-        oled.init()
+        yield oled.init()
         oled.clearDisplay()
         oled.setNormalDisplay()
         oled.setPageMode()
@@ -185,14 +200,15 @@ class CloudingThingsGroveOled(CloudingThingsGroveActuator):
             oled.putString('Waiting...')
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'msg':
-                    oled.clearDisplay()
+                    yield oled.clearDisplay()
                     for i in range(4, 5):
-                        oled.setTextXY(i,i)
-                        oled.putString(v)
+                        yield oled.setTextXY(i,i)
+                        yield oled.putString(v)
 
 
 class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
@@ -292,5 +308,3 @@ class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
                     continue
             count += 1
             self._bus.write_byte_data(self.DISPLAY_TEXT_ADDR,0x40,ord(c))
-
-
