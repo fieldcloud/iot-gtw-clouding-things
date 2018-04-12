@@ -130,15 +130,21 @@ class CloudingThingsPiGateway(object):
 
     @defer.inlineCallbacks
     def on_message(self, cl, userdata, msg):
-       '''
-           The callback for when a PUBLISH message is received from the server.
-           Call do method of related actuator
-       '''
-       if msg.get('type') == "TH_setActuator":
-           if msg.get('gatewayId') == self._params.get('serial'):
-               actions=msg.get('payload')
-               for action in actions:
-                   yield self._execute(action)
+        '''
+            The callback for when a PUBLISH message is received from the server.
+            Call do method of related actuator
+        '''
+        print msg.payload
+        if msg is not None:
+            sp=msg.payload
+            if sp is not None:
+                pl=json.loads(sp)
+                if pl.get('type') == "TH_setActuator":
+                    if pl.get('gatewayId') == self._params.get('serial'):
+                        actions=pl.get('payload')
+                        for action in actions:
+                            yield self._execute(action)
+        yield defer.returnValue('0')
 
 
     @defer.inlineCallbacks
@@ -149,8 +155,9 @@ class CloudingThingsPiGateway(object):
             actuator=self._actuators.get(id)
             if actuator is not None:
                 a={}
-                a[actuator.get('outputName')]=actuator.get('value')
+                a[action.get('outputName')]=action.get('value')
                 yield actuator.do(a)
+        yield defer.returnValue('0')
 
 
     def on_disconnect(self, cl, userdata, rc):
@@ -173,7 +180,7 @@ class CloudingThingsPiGateway(object):
         '''
            Manage gateway connection to mqtt broker
         '''
-#        self.params[=cl_id
+        print self._params
         #serial & security parameters
         print 'starting'
         # mqtt client creation
@@ -194,6 +201,7 @@ class CloudingThingsPiGateway(object):
         #connection
         res = self._mqtt_client.connect_async(self._params.get('broker'), 
                                               port=self._params.get('port'))
+        print res
         self._mqtt_client.loop_start()
 
 
@@ -218,10 +226,13 @@ class CloudingThingsPiGateway(object):
             print payload
             print self._topic
             if self._mqtt_client is not None:
-                yield self._mqtt_client.publish(self._topic, payload=payload)
+                r = yield self._mqtt_client.publish(self._topic,
+                                                    payload=payload)
+                print r
         except Exception as e:
-            logging.warning('{} - Impossible to publish message with error: {}'\
+            logging.warning('{} - Impossible to publish message: {}'\
                   ''.format(datetime.now(), str(e.args).strip('(),\"')))
+        yield defer.returnValue('0')
 
 
     def _make_ct_payload(self, data):

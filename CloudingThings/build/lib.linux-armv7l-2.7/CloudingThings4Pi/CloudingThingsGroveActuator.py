@@ -36,7 +36,7 @@ import CloudingThings4Pi.AsynchGrovePi as grovepi
 import logging
 from datetime import datetime
 import time,sys
-from twisted.internet.defer import Deferred, inlineCallbacks
+from twisted.internet.defer import Deferred, inlineCallbacks, returnValue
 from twisted.internet import reactor
 import grove_128_64_oled as oled
 
@@ -96,33 +96,30 @@ class CloudingThingsGroveLedbar(CloudingThingsGroveActuator):
     @inlineCallbacks
     def _init_actuator(self):
         grovepi.ledBar_init(self._pin, 0)
-        yield sleep(0.5)
+        sleep(0.5)
         grovepi.ledBar_setLevel(self._pin, 5)
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'level':
-                    yield grovepi.ledBar_setLevel(self._pin, v)
+                    grovepi.ledBar_setLevel(self._pin, v)
 
 
 class CloudingThingsGroveLed(CloudingThingsGroveActuator):
 
     '''Led actuator'''
 
-    @inlineCallbacks
     def _init_actuator(self):
         grovepi.pinMode(self._pin, 'OUTPUT')
-        yield grovepi.digitalWrite(self._pin, 0)
-        yield sleep(1.0)
-        yield grovepi.digitalWrite(self._pin, 1)
-        yield sleep(1.0)
-        yield grovepi.digitalWrite(self._pin, 0)
+        grovepi.digitalWrite(self._pin, 1)
+        sleep(1.0)
+        grovepi.digitalWrite(self._pin, 1)
+        sleep(1.0)
+        grovepi.digitalWrite(self._pin, 0)
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             self._blinking=False
@@ -130,68 +127,64 @@ class CloudingThingsGroveLed(CloudingThingsGroveActuator):
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
                 elif k == 'blink':
-                    yield self._blink(v)
+#                    self._blink(float(v), 1)
+                    reactor.callLater(1.0, self._blink, 1)
 
 
-    @inlineCallbacks
-    def _blink(self, duration):
-        grovepi.digitalWrite(self._pin, 1)
-        yield sleep(duration)
-        grovepi.digitalWrite(self._pin, 0)
-        reactor.callLater(duration, self._blink, duration)
+    def _blink(self, state):
+        grovepi.digitalWrite(self._pin, state)
+        if state == 0:
+            state=1
+        else:
+            state=0
 
 
 class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
 
     '''Relay actuator'''
 
-    @inlineCallbacks
     def _init_actuator(self):
         grovepi.pinMode(self._pin, 'OUTPUT')
-        yield grovepi.digitalWrite(self._pin, 0)
-        yield sleep(1.0)
-        yield grovepi.digitalWrite(self._pin, 1)
-        yield sleep(1.0)
-        yield grovepi.digitalWrite(self._pin, 0)
+        grovepi.digitalWrite(self._pin, 0)
+        sleep(1.0)
+        grovepi.digitalWrite(self._pin, 1)
+        sleep(1.0)
+        grovepi.digitalWrite(self._pin, 0)
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
-                    yield grovepi.digitalWrite(self._pin, v)
+                    grovepi.digitalWrite(self._pin, v)
 
 
 class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
 
     '''Buzzer actuator'''
 
-    @inlineCallbacks
     def _init_actuator(self):
         grovepi.pinMode(self._pin, 'OUTPUT')
-        yield grovepi.digitalWrite(self._pin, 0)
-        yield sleep(1.0)
-        yield grovepi.digitalWrite(self._pin, 1)
-        yield sleep(1.0)
-        yield grovepi.digitalWrite(self._pin, 0)
+        grovepi.digitalWrite(self._pin, 0)
+        sleep(1.0)
+        grovepi.digitalWrite(self._pin, 1)
+        sleep(1.0)
+        grovepi.digitalWrite(self._pin, 0)
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
-                    yield grovepi.digitalWrite(self._pin, v)
+                    grovepi.digitalWrite(self._pin, v)
 
 
 class CloudingThingsGroveOled(CloudingThingsGroveActuator):
 
     '''Oled actuator'''
 
-    @inlineCallbacks
     def _init_actuator(self):
-        yield oled.init()
+        oled.init()
         oled.clearDisplay()
         oled.setNormalDisplay()
         oled.setPageMode()
@@ -200,15 +193,14 @@ class CloudingThingsGroveOled(CloudingThingsGroveActuator):
             oled.putString('Waiting...')
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'msg':
-                    yield oled.clearDisplay()
+                    oled.clearDisplay()
                     for i in range(4, 5):
-                        yield oled.setTextXY(i,i)
-                        yield oled.putString(v)
+                        oled.setTextXY(i,i)
+                        oled.putString(v)
 
 
 class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
@@ -263,12 +255,11 @@ class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
         self._bus.write_byte_data(self.DISPLAY_TEXT_ADDR,0x80,cmd)
 
 
-    @inlineCallbacks
     def set_text(self, text):
         self._text_command(0x01) # clear display
-        yield sleep(.05)
+        sleep(.05)
         self._text_command(0x08 | 0x04) # display on, no cursor
-        yield sleep(.05)
+        sleep(.05)
         self._text_command(0x28) # 2 lines
         count = 0
         row = 0
@@ -285,14 +276,13 @@ class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
             self._bus.write_byte_data(self.DISPLAY_TEXT_ADDR,0x40,ord(c))
 
 
-    @inlineCallbacks
     def set_text_norefresh(text):
         self._text_command(0x02) # return home
-        yield sleep(.05)
+        sleep(.05)
         self._text_command(0x08 | 0x04) # display on, no cursor
-        yield sleep(.05)
+        sleep(.05)
         self._text_command(0x28) # 2 lines
-        yield sleep(.05)
+        sleep(.05)
         count = 0
         row = 0
         while len(text) < 32: #clears the rest of the screen
