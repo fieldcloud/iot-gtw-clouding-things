@@ -33,7 +33,8 @@
         ct_gtw.run()
 '''
 
-import grovepi
+#import grovepi
+import CloudingThings4Pi.AsynchGrovePi as grovepi
 import CloudingThingsPiGateway
 from twisted.internet import reactor
 from twisted.internet import defer

@@ -11,10 +11,35 @@ import paho.mqtt.publish as publish
 import ssl
 import time
 from twisted.internet import reactor
+from twisted.internet import defer
 import json
 
 '''
-    
+    CloudingThingsPiGateway Module
+    ==============================
+
+    Usage: 
+        Create sensor/actuator IoT Gateway connected to Clouding Things
+        use case prototyping platform
+    License: MIT
+    Contributors: 
+        Jean Poma - Initial development
+
+    ==============================
+
+    Example:
+        import CloudingThings4Pi.CloudingThingsPiGateway as ctpg
+        gtw_config={
+           'client': 'demo',
+           'serial': 'demo',
+           'credential_file': 'path_to_crt.crt',
+           'broker': '5.135.83.28',
+           'transport': 'ssl',
+           'port': 8883,
+           'auto_reconnect': True
+        }
+        ct_gtw=ctpg.CloudingThingsPiGateway(gtw_config)
+        ct_gtw.run()
 '''
 
 __version__='0.1.0'
@@ -43,7 +68,7 @@ class CloudingThingsPiGateway(object):
 
     def __init__(self, config):
         '''
-            Initialize needed parameters
+            Initialize gateway with configuration informations
         '''
         if config is not None and self._check_config(config) == True:
             self._params=config
@@ -77,12 +102,18 @@ class CloudingThingsPiGateway(object):
 
 
     def add_sensor(self, sensor):
+        '''
+            Allow developpers to add compatible sensors to the gateway.
+        '''
         if sensor is not None:
             self._sensors[sensor.get_serial()]=sensor
             sensor.link_to_gateway(self)
 
 
     def add_actuator(self, actuator):
+        '''
+            Allow developpers to add compatible actuators to the gateway.
+        '''
         if actuator is not None:
             self._actuators[actuator.get_serial()]=actuator
 
@@ -90,23 +121,27 @@ class CloudingThingsPiGateway(object):
 #------------------------------- MQTT methods ---------------------------------#
     def on_connect(self, cl, userdata, flags, rc):
         '''
-            Called on connection to Clouding Things platform
+            Called on connection to Clouding Things platform. Manage 
+            subscriptions to mqtt events.
         '''
-        logging.warning("Connected with result code {}".format(str(rc)))
+        logging.info("Connected with result code {}".format(str(rc)))
         self._mqtt_client.subscribe(self._subscription)
 
 
+    @defer.inlineCallbacks
     def on_message(self, cl, userdata, msg):
        '''
            The callback for when a PUBLISH message is received from the server.
+           Call do method of related actuator
        '''
        if msg.get('type') == "TH_setActuator":
            if msg.get('gatewayId') == self._params.get('serial'):
                actions=msg.get('payload')
                for action in actions:
-                   self._execute(action)
+                   yield self._execute(action)
 
 
+    @defer.inlineCallbacks
     def _execute(self, action):
         ids=action.get('deviceId').split('-')
         if len(ids) == 2:
@@ -115,7 +150,7 @@ class CloudingThingsPiGateway(object):
             if actuator is not None:
                 a={}
                 a[actuator.get('outputName')]=actuator.get('value')
-                actuator.do(a)
+                yield actuator.do(a)
 
 
     def on_disconnect(self, cl, userdata, rc):
@@ -135,6 +170,9 @@ class CloudingThingsPiGateway(object):
 
 
     def start_mqtt_client(self):
+        '''
+           Manage gateway connection to mqtt broker
+        '''
 #        self.params[=cl_id
         #serial & security parameters
         print 'starting'
@@ -160,12 +198,19 @@ class CloudingThingsPiGateway(object):
 
 
     def disconnect(self):
-        if client is not None:
-            self.client.disconnect()
+        '''
+            Disconnect mqtt client
+        '''
+        if self._mqtt_client is not None:
+            self._mqtt_client.disconnect()
 
 
 #publish
+    @defer.inlineCallbacks
     def publish(self, data):
+        '''
+            Publish data received from sensor on mqtt topic
+        '''
         pl = self._make_ct_payload(data)
         try:
             payload= json.dumps(pl).encode('utf-8')
@@ -173,7 +218,7 @@ class CloudingThingsPiGateway(object):
             print payload
             print self._topic
             if self._mqtt_client is not None:
-                print self._mqtt_client.publish(self._topic, payload=payload)
+                yield self._mqtt_client.publish(self._topic, payload=payload)
         except Exception as e:
             logging.warning('{} - Impossible to publish message with error: {}'\
                   ''.format(datetime.now(), str(e.args).strip('(),\"')))
@@ -207,5 +252,3 @@ class CloudingThingsPiGateway(object):
         '''
         reactor.callWhenRunning(self.start_mqtt_client)
         reactor.run()
-
-

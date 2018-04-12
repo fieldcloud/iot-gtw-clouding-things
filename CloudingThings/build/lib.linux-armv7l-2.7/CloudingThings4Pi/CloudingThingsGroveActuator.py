@@ -1,33 +1,38 @@
 #!/usr/bin/env python
 
-# 
-
-'''
-The MIT License (MIT)
-
-GrovePi for the Raspberry Pi: an open source platform for connecting Grove Sens$
-Copyright (C) 2017  Dexter Industries
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
 '''
 
-import grovepi
+    CloudingThingsGroveSensor Module
+    ==============================
+
+    Usage:
+        Create grove actuator for IoT Gateway connected to Clouding Things
+        use case prototyping platform
+    License: MIT
+    Contributors:
+        Jean Poma - Initial development
+
+    ==============================
+
+    Example:
+        import CloudingThings4Pi.CloudingThingsPiGateway as ctpg
+        from CloudingThings4Pi.CloudingThingsGroveActuator import *
+        gtw_config={
+           'client': 'demo',
+           'serial': 'demo',
+           'credential_file': 'path_to_crt.crt',
+           'broker': '5.135.83.28',
+           'transport': 'ssl',
+           'port': 8883,
+           'auto_reconnect': True
+        }
+        ct_gtw=ctpg.CloudingThingsPiGateway(gtw_config)
+        ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', 7))
+        ct_gtw.run()
+'''
+
+#import grovepi
+import CloudingThings4Pi.AsynchGrovePi as grovepi
 import logging
 from datetime import datetime
 import time,sys
@@ -43,11 +48,21 @@ def sleep(secs):
 
 class CloudingThingsGroveActuator(object):
 
+    '''
+        Abstract class managing actuator initialization, link to gateway and
+        data publishment
+    '''
+
     _serial='Generic'
     _pin=0
 
 
     def __init__(self, serial, pin):
+        '''
+            Initialize actuator parameters:
+                serial -- Clouding Things sensor serial number
+                pin -- pin attached to sensor
+        '''
         self._serial = serial
         self._pin = pin
         self._init_actuator()
@@ -63,6 +78,7 @@ class CloudingThingsGroveActuator(object):
 
 
     def get_serial(self):
+        ''' Return sensor Clouding Things serial number '''
         return self._serial
 
 
@@ -75,6 +91,7 @@ class CloudingThingsGroveActuator(object):
 
 class CloudingThingsGroveLedbar(CloudingThingsGroveActuator):
 
+    '''Ledbar actuator'''
 
     @inlineCallbacks
     def _init_actuator(self):
@@ -93,6 +110,7 @@ class CloudingThingsGroveLedbar(CloudingThingsGroveActuator):
 
 class CloudingThingsGroveLed(CloudingThingsGroveActuator):
 
+    '''Led actuator'''
 
     @inlineCallbacks
     def _init_actuator(self):
@@ -113,6 +131,7 @@ class CloudingThingsGroveLed(CloudingThingsGroveActuator):
 
 class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
 
+    '''Relay actuator'''
 
     @inlineCallbacks
     def _init_actuator(self):
@@ -133,6 +152,7 @@ class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
 
 class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
 
+    '''Buzzer actuator'''
 
     @inlineCallbacks
     def _init_actuator(self):
@@ -153,6 +173,7 @@ class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
 
 class CloudingThingsGroveOled(CloudingThingsGroveActuator):
 
+    '''Oled actuator'''
 
     def _init_actuator(self):
         oled.init()
@@ -176,6 +197,7 @@ class CloudingThingsGroveOled(CloudingThingsGroveActuator):
 
 class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
 
+    '''Lcd actuator'''
 
     # this device has two I2C addresses
     DISPLAY_RGB_ADDR = 0x62
