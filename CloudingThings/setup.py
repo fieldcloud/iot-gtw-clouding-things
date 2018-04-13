@@ -12,7 +12,7 @@ import CloudingThings4Pi
 
 setup(
     name = "CloudingThings4Pi",
-    version = "0.4.6",
+    version = "0.4.7",
 
     description = "Python library used to easily develop an IoT gateway "\
                   "based on RaspBerry Pi and Dexter Grove Pi sensor board "\

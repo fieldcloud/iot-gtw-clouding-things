@@ -169,11 +169,6 @@ class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
 
     def _init_actuator(self):
         grovepi.pinMode(self._pin, 'OUTPUT')
-        grovepi.digitalWrite(self._pin, 0)
-        sleep(1.0)
-        grovepi.digitalWrite(self._pin, 1)
-        sleep(1.0)
-        grovepi.digitalWrite(self._pin, 0)
 
 
     def do(self, action):
