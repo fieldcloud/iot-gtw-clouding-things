@@ -38,6 +38,7 @@ from datetime import datetime
 import time,sys
 from twisted.internet.defer import Deferred, inlineCallbacks, returnValue
 from twisted.internet import reactor
+from twisted.internet import task
 import grove_128_64_oled as oled
 
 def sleep(secs):
@@ -82,11 +83,12 @@ class CloudingThingsGroveActuator(object):
         return self._serial
 
 
+#    @inlineCallbacks
     def do(self, action):
         '''
             Action done by actuator
         '''
-        pass
+        yield returnValue('0')
 
 
 class CloudingThingsGroveLedbar(CloudingThingsGroveActuator):
@@ -99,47 +101,56 @@ class CloudingThingsGroveLedbar(CloudingThingsGroveActuator):
         grovepi.ledBar_setLevel(self._pin, 5)
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'level':
                     grovepi.ledBar_setLevel(self._pin, v)
+        yield returnValue('0')
 
 
 class CloudingThingsGroveLed(CloudingThingsGroveActuator):
 
     '''Led actuator'''
 
+    _blinking_period=1.0
+    _blinking=False
+    _blinking_loop=None
+    _led_status=0
+
     def _init_actuator(self):
         grovepi.pinMode(self._pin, 'OUTPUT')
-        grovepi.digitalWrite(self._pin, 1)
-        sleep(1.0)
-        grovepi.digitalWrite(self._pin, 1)
-        sleep(1.0)
-        grovepi.digitalWrite(self._pin, 0)
+        self._blinking_loop=task.LoopingCall(self._blink)
+        self._blinking_loop.start(0.5)
 
 
     def do(self, action):
+        print self._blinking_loop
+        if self._blinking_loop is not None:
+            try:
+                self._blinking_loop.stop()
+                print "pre action done for led"
+            except:
+                pass
         if action is not None:
-            self._blinking=False
             for k, v in action.iteritems():
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
                 elif k == 'blink':
-                    self._blinking=True
                     self._blinking_period=float(v)
-                    self._blink()
-#                    reactor.callLater(1.0, self._blink, 1)
+                    print 'blink to start'
+                    self._blinking_loop=task.LoopingCall(self._blink)
+                    self._blinking_loop.start(self._blinking_period)
+        print 'action done'
 
 
-    @inlineCallbacks
     def _blink(self):
-        while self._blinking==True:
-            grovepi.digitalWrite(self._pin, 1)
-            yield sleep(self._blinking_period)
-            grovepi.digitalWrite(self._pin, 0)
-            yield sleep(self._blinking_period)
-
+        grovepi.digitalWrite(self._pin, self._led_status)
+        if self._led_status==0:
+            self._led_status=1
+        else:
+            self._led_status=0
 
 
 class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
@@ -155,11 +166,13 @@ class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
         grovepi.digitalWrite(self._pin, 0)
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
+        yield returnValue('0')
 
 
 class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
@@ -175,11 +188,13 @@ class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
         grovepi.digitalWrite(self._pin, 0)
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
+        yield returnValue('0')
 
 
 class CloudingThingsGroveOled(CloudingThingsGroveActuator):
@@ -196,6 +211,7 @@ class CloudingThingsGroveOled(CloudingThingsGroveActuator):
             oled.putString('Waiting...')
 
 
+    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
@@ -243,6 +259,7 @@ class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
                     yield self.set_text(v)
                 elif k == 'rgb':
                     pass
+        yield returnValue('0')
 
 
     def set_RGB(self, r,g,b):
