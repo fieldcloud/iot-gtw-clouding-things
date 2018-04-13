@@ -83,7 +83,6 @@ class CloudingThingsGroveActuator(object):
         return self._serial
 
 
-#    @inlineCallbacks
     def do(self, action):
         '''
             Action done by actuator
@@ -101,13 +100,11 @@ class CloudingThingsGroveLedbar(CloudingThingsGroveActuator):
         grovepi.ledBar_setLevel(self._pin, 5)
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'level':
                     grovepi.ledBar_setLevel(self._pin, v)
-        yield returnValue('0')
 
 
 class CloudingThingsGroveLed(CloudingThingsGroveActuator):
@@ -130,7 +127,6 @@ class CloudingThingsGroveLed(CloudingThingsGroveActuator):
         if self._blinking_loop is not None:
             try:
                 self._blinking_loop.stop()
-                print "pre action done for led"
             except:
                 pass
         if action is not None:
@@ -139,7 +135,6 @@ class CloudingThingsGroveLed(CloudingThingsGroveActuator):
                     grovepi.digitalWrite(self._pin, v)
                 elif k == 'blink':
                     self._blinking_period=float(v)
-                    print 'blink to start'
                     self._blinking_loop=task.LoopingCall(self._blink)
                     self._blinking_loop.start(self._blinking_period)
         print 'action done'
@@ -159,20 +154,13 @@ class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
 
     def _init_actuator(self):
         grovepi.pinMode(self._pin, 'OUTPUT')
-        grovepi.digitalWrite(self._pin, 0)
-        sleep(1.0)
-        grovepi.digitalWrite(self._pin, 1)
-        sleep(1.0)
-        grovepi.digitalWrite(self._pin, 0)
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
-        yield returnValue('0')
 
 
 class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
@@ -188,13 +176,11 @@ class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
         grovepi.digitalWrite(self._pin, 0)
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'state':
                     grovepi.digitalWrite(self._pin, v)
-        yield returnValue('0')
 
 
 class CloudingThingsGroveOled(CloudingThingsGroveActuator):
@@ -211,7 +197,6 @@ class CloudingThingsGroveOled(CloudingThingsGroveActuator):
             oled.putString('Waiting...')
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
@@ -251,15 +236,13 @@ class CloudingThingsGroveLcd(CloudingThingsGroveActuator):
         self.set_text('Started, waiting for message...')
 
 
-    @inlineCallbacks
     def do(self, action):
         if action is not None:
             for k, v in action.iteritems():
                 if k == 'msg':
-                    yield self.set_text(v)
+                    self.set_text(v)
                 elif k == 'rgb':
                     pass
-        yield returnValue('0')
 
 
     def set_RGB(self, r,g,b):
