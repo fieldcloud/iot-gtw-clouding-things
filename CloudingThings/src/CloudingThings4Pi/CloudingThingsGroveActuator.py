@@ -163,6 +163,21 @@ class CloudingThingsGroveRelay(CloudingThingsGroveActuator):
                     grovepi.digitalWrite(self._pin, v)
 
 
+class CloudingThingsGroveWaterAtomization(CloudingThingsGroveActuator):
+
+    '''Water Atomization actuator'''
+
+    def _init_actuator(self):
+        grovepi.pinMode(self._pin, 'OUTPUT')
+
+
+    def do(self, action):
+        if action is not None:
+            for k, v in action.iteritems():
+                if k == 'state':
+                    grovepi.digitalWrite(self._pin, v)
+
+
 class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
 
     '''Buzzer actuator'''

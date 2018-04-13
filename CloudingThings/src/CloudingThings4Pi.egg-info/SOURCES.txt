@@ -3,6 +3,7 @@ setup.py
 src/CloudingThings4Pi/AsynchGrovePi.py
 src/CloudingThings4Pi/CloudingThingsGroveActuator.py
 src/CloudingThings4Pi/CloudingThingsGroveSensor.py
+src/CloudingThings4Pi/CloudingThingsMqttClient.py
 src/CloudingThings4Pi/CloudingThingsPiGateway.py
 src/CloudingThings4Pi/__init__.py
 src/CloudingThings4Pi.egg-info/PKG-INFO
