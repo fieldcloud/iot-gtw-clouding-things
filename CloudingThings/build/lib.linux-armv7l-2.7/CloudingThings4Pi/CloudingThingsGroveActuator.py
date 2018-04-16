@@ -42,9 +42,9 @@ from twisted.internet import task
 import grove_128_64_oled as oled
 
 def sleep(secs):
-  d = Deferred()
-  reactor.callLater(secs, d.callback, None)
-  return d
+    d = Deferred()
+    reactor.callLater(secs, d.callback, None)
+    return d
 
 
 class CloudingThingsGroveActuator(object):

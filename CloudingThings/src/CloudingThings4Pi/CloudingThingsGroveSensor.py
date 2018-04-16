@@ -41,6 +41,13 @@ from twisted.internet import defer
 from twisted.internet import task
 import logging
 from datetime import datetime
+from serial import Serial
+
+
+def sleep(secs):
+    d = defer.Deferred()
+    reactor.callLater(secs, d.callback, None)
+    return d
 
 
 class CloudingThingsGroveSensor(object):
@@ -270,6 +277,47 @@ class CloudingThingsGroveMoisture(CloudingThingsGroveSensor):
         data={}
         data['moisture']=grovepi.analogRead(self._pin)
         return data
+
+
+class CloudingThingsGroveRfid(CloudingThingsGroveSensor):
+
+    '''Rfid tag reader sensor'''
+
+    _ser=None
+    _last_tag=None
+
+
+    @defer.inlineCallbacks
+    def _read(self):
+        self._last_tag = None
+        data={}
+        self._ser=Serial('/dev/ttyS0', baudrate=9600, timeout=0)
+        self._ser.close()
+        self._ser.open()
+        if self._ser is not None:
+            tag=''
+            while self._last_tag is None:
+                try:
+                    if self._ser.inWaiting():
+                        tag = tag +  self._ser.read()
+                    if len(tag) == 14:
+                        t2 = '0x{}'.format(tag[3:11])
+                        i_tag = int(t2,0)
+                        tag = str(i_tag)
+                        while len(tag) < 10:
+                            tag = '0{}'.format(tag)
+                        break
+                except Exception as e:
+                    print e.args
+                yield sleep(0.01)
+            self._ser.close()
+            if len(tag) == 10:
+                data['tag']=tag
+            else:
+                data['tag']=''
+            self._last_tag=tag
+        self._ser=None
+        yield defer.returnValue(data)
 
 
 class CloudingThingsGrovePiezo(CloudingThingsGroveSensor):
