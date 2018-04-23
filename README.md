@@ -30,7 +30,7 @@ Functionnal examples in example folder
 
 Configuration values:
 
-'''
+```
 gtw_config={
         'client': 'your_client_name',
         'serial': 'your_gateway_name',
@@ -40,7 +40,7 @@ gtw_config={
         'port': 8883,
         'auto_reconnect': True
 }
-'''
+```
 
 Where:
 - client: your client name in Clouding Things platform
@@ -49,17 +49,18 @@ Where:
 
 Gateway creation:
 
-'''
+```
 import CloudingThings4Pi.CloudingThingsPiGateway as ctpg
 
 ct_gtw=ctpg.CloudingThingsPiGateway(gtw_config)
-'''
+```
 
 To start gateway:
 
-'''
+```
 ct_gtw.run()
-'''
+```
+
 ### Sensors
 
 Available sensors:
