@@ -63,7 +63,7 @@ class CloudingThingsGroveSensor(object):
     _pin=0
 
 
-    def __init__(self, period, serial, pin):
+    def __init__(self, serial, period=1.0, pin=0):
         '''
             Initialize sensor parameters:
                 period -- time between 2 data readings

@@ -19,17 +19,17 @@ if __name__ == "__main__":
     #Gateway
     ct_gtw=ctpg.CloudingThingsPiGateway(gtw_config)
     #Actuators
-    ct_gtw.add_actuator(CloudingThingsGroveLcd('lcd', 0))
-    ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', 7))
-    ct_gtw.add_actuator(CloudingThingsGroveOled('oled', 0))
-    ct_gtw.add_actuator(CloudingThingsGroveLed('led', 8))
+#    ct_gtw.add_actuator(CloudingThingsGroveLcd('lcd'))
+    ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', pin=7))
+#    ct_gtw.add_actuator(CloudingThingsGroveOled('oled'))
+    ct_gtw.add_actuator(CloudingThingsGroveLed('led', pin=8))
     #Sensors
-    ct_gtw.add_sensor(CloudingThingsGroveUltrasonic(1.0, 'ultrasonic',4))
-    ct_gtw.add_sensor(CloudingThingsGroveGas(10.0, 'gas',1))
-    ct_gtw.add_sensor(CloudingThingsGroveLight(9.0, 'light',2))
-    ct_gtw.add_sensor(CloudingThingsGrovePotentiometer(6.0, 'potentiometer',0))
-    ct_gtw.add_sensor(CloudingThingsGroveMoisture(5.0, 'moisture',2))
-    ct_gtw.add_sensor(CloudingThingsGroveDht(1.0, 'dht',5))
-    ct_gtw.add_sensor(CloudingThingsGroveDhtPro(1.5, 'dht pro', 6))
+    ct_gtw.add_sensor(CloudingThingsGroveUltrasonic('ultrasonic', pin=4))
+    ct_gtw.add_sensor(CloudingThingsGroveGas('gas', period=5.0, pin=1))
+    ct_gtw.add_sensor(CloudingThingsGroveLight('light', period=2.0, pin=2))
+    ct_gtw.add_sensor(CloudingThingsGrovePotentiometer('potentiometer', pin=0))
+    ct_gtw.add_sensor(CloudingThingsGroveMoisture('moisture', pin=2))
+    ct_gtw.add_sensor(CloudingThingsGroveDht('dht', period=2.0, pin=5))
+    ct_gtw.add_sensor(CloudingThingsGroveDhtPro('dht pro', pin=6))
     #Start gateway
     ct_gtw.run()

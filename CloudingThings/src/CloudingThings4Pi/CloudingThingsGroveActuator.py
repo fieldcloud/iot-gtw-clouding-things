@@ -58,7 +58,7 @@ class CloudingThingsGroveActuator(object):
     _pin=0
 
 
-    def __init__(self, serial, pin):
+    def __init__(self, serial, pin=0):
         '''
             Initialize actuator parameters:
                 serial -- Clouding Things sensor serial number
