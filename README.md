@@ -18,9 +18,9 @@ This module requires:
 
 In CloudingThings folder:
 
-'''
+```
 sudo python setup.py install
-'''
+```
 
 ## Usage
 
