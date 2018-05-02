@@ -197,7 +197,8 @@ class CloudingThingsMqttClient(object):
         payload = {}
         val = {}
         payload[data.get('serial')] = val
-        tss=datetime.utcnow()
+#        tss=datetime.utcnow()
+        tss=datetime.now()
         ts = int(time.mktime(tss.timetuple()))*1000+(tss.microsecond/1000)
         for k, v in data.iteritems():
             if k != 'serial':
