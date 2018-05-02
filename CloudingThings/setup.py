@@ -8,8 +8,6 @@ except IOError:
 
 from setuptools import setup, find_packages
 
-import CloudingThings4Pi
-
 setup(
     name = "CloudingThings4Pi",
     version = "0.7.0",
