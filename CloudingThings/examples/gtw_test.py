@@ -21,7 +21,6 @@ if __name__ == "__main__":
     #Actuators
 #    ct_gtw.add_actuator(CloudingThingsGroveLcd('lcd'))
     ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', pin=7))
-#    ct_gtw.add_actuator(CloudingThingsGroveOled('oled'))
     ct_gtw.add_actuator(CloudingThingsGroveLed('led', pin=8))
     #Sensors
     ct_gtw.add_sensor(CloudingThingsGroveUltrasonic('ultrasonic', pin=4))
