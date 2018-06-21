@@ -15,12 +15,21 @@ To check Python version:
 pip show python
 ```
 
-To upgrade Python to the last version:
+To upgrade Python to the last version (for OS version):
 ```
-sudo add-apt-repository ppa:fkrull/deadsnakes-python2.7
 sudo apt-get update
 sudo apt-get upgrade
 ```
+
+To upgrade Python to a specific version:
+```
+wget https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tgz
+tar -xzvf Python-2.7.15.tgz
+cd Python-2.7.15/
+./configure --prefix=/usr/local
+sudo make altinstall
+```
+
 
 ### Required packages
 
