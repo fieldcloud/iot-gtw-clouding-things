@@ -6,6 +6,22 @@ This python module allows any Clouding Things user to create a sensord/actuators
 
 ## Installation
 
+### Python
+
+This module needs Python >= 2.7.9.
+
+To check Python version:
+```
+pip show python
+```
+
+To upgrade Python to the last version:
+```
+sudo add-apt-repository ppa:fkrull/deadsnakes-python2.7
+sudo apt-get update
+sudo apt-get upgrade
+```
+
 ### Required packages
 
 This module requires:
