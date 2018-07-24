@@ -39,7 +39,7 @@ import time,sys
 from twisted.internet.defer import Deferred, inlineCallbacks, returnValue
 from twisted.internet import reactor
 from twisted.internet import task
-import grove_128_64_oled as oled
+#import grove_128_64_oled as oled
 
 def sleep(secs):
     d = Deferred()
@@ -193,28 +193,28 @@ class CloudingThingsGroveBuzzer(CloudingThingsGroveActuator):
                     grovepi.digitalWrite(self._pin, v)
 
 
-class CloudingThingsGroveOled(CloudingThingsGroveActuator):
-
-    '''Oled actuator'''
-
-    def _init_actuator(self):
-        oled.init()
-        oled.clearDisplay()
-        oled.setNormalDisplay()
-        oled.setPageMode()
-        for i in range(4, 5):
-            oled.setTextXY(0,i)
-            oled.putString('Waiting...')
-
-
-    def do(self, action):
-        if action is not None:
-            for k, v in action.iteritems():
-                if k == 'msg':
-                    oled.clearDisplay()
-                    for i in range(4, 5):
-                        oled.setTextXY(i,i)
-                        oled.putString(v)
+#class CloudingThingsGroveOled(CloudingThingsGroveActuator):
+#
+#    '''Oled actuator'''
+#
+#    def _init_actuator(self):
+#        oled.init()
+#        oled.clearDisplay()
+#        oled.setNormalDisplay()
+#        oled.setPageMode()
+#        for i in range(4, 5):
+#            oled.setTextXY(0,i)
+#            oled.putString('Waiting...')
+#
+#
+#    def do(self, action):
+#        if action is not None:
+#            for k, v in action.iteritems():
+#                if k == 'msg':
+#                    oled.clearDisplay()
+#                    for i in range(4, 5):
+#                        oled.setTextXY(i,i)
+#                        oled.putString(v)
 
 
 class CloudingThingsGroveLcd(CloudingThingsGroveActuator):

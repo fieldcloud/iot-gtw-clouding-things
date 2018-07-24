@@ -20,9 +20,14 @@ if __name__ == "__main__":
     ct_gtw=ctpg.CloudingThingsPiGateway(gtw_config)
     #Actuators
 #    ct_gtw.add_actuator(CloudingThingsGroveLcd('lcd'))
+<<<<<<< HEAD
 #    ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', pin=7))
 #    ct_gtw.add_actuator(CloudingThingsGroveOled('oled'))
 #    ct_gtw.add_actuator(CloudingThingsGroveLed('led', pin=8))
+=======
+    ct_gtw.add_actuator(CloudingThingsGroveLedbar('ledbar', pin=7))
+    ct_gtw.add_actuator(CloudingThingsGroveLed('led', pin=8))
+>>>>>>> 0b1b1e98d6888b1e3955b6a6a8bfbe9cb0ff7e2c
     #Sensors
     ct_gtw.add_sensor(CloudingThingsGroveUltrasonic('ultrasonic', pin=4))
 #    ct_gtw.add_sensor(CloudingThingsGroveGas('gas', period=5.0, pin=1))

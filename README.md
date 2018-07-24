@@ -6,13 +6,39 @@ This python module allows any Clouding Things user to create a sensord/actuators
 
 ## Installation
 
+### Python
+
+This module needs Python >= 2.7.9.
+
+To check Python version:
+```
+pip show python
+```
+
+To upgrade Python to the last version (for OS version):
+```
+sudo apt-get update
+sudo apt-get upgrade
+```
+
+To upgrade Python to a specific version:
+```
+wget https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tgz
+tar -xzvf Python-2.7.15.tgz
+cd Python-2.7.15/
+./configure --prefix=/usr/local
+sudo make altinstall
+```
+
+
 ### Required packages
 
 This module requires:
 * twisted: ``` sudo pip install twisted ```
-* grovepi: https://github.com/DexterInd/GrovePi/tree/master/Software/Python
 * paho-mqtt: ``` sudo pip install paho-mqtt ```
+* grovepi: https://github.com/DexterInd/GrovePi/tree/master/Software/Python
 
+Update grove pi firmware following instructions at: https://github.com/DexterInd/GrovePi/tree/master/Firmware
 
 ### Module installation
 
