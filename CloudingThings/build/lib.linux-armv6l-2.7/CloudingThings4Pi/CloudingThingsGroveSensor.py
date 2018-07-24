@@ -201,24 +201,6 @@ class CloudingThingsGroveGas(CloudingThingsGroveSensor):
         return data
 
 
-class CloudingThingsGroveSound(CloudingThingsGroveSensor):
-
-    '''Sound sensor'''
-
-    def _init_sensor(self):
-        try:
-            grovepi.pinMode(self._pin,"INPUT")
-        except:
-            pass
-
-
-    def _read(self):
-        data={}
-        sensor_value=grovepi.analogRead(self._pin)
-        data['sound_measurement']=sensor_value
-        return data
-
-
 class CloudingThingsGrovePotentiometer(CloudingThingsGroveSensor):
 
     '''Potentiometer sensor'''

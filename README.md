@@ -106,6 +106,12 @@ Available sensors:
         * gas_measurement: analog value
         * gas_density: calculated gas density
 
+* Sound:
+    * http://wiki.seeedstudio.com/Grove-Sound_Sensor/
+    * name: CloudingThingsGroveSound
+    * available:
+        * sound_measurement: analog value
+
 * Potentiometer:
     * https://www.seeedstudio.com/Grove-Rotary-Angle-Sensor-p-770.html
     * name: CloudingThingsGrovePotentiometer
