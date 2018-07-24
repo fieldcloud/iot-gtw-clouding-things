@@ -1,3 +1,0 @@
-grovepi
-paho-mqtt
-twisted
