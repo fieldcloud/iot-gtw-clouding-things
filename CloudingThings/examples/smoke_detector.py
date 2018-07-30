@@ -7,7 +7,7 @@ from CloudingThings4Pi.CloudingThingsGroveActuator import *
 
 gtw_config={
         'client': 'FieldCloud',
-        'serial': 'PiDemoFlcl_1',
+        'serial': 'Smoke_detector_example',
         'credential_file': '/home/pi/.ct/gtw_crt_file.crt',
         'broker': '5.135.83.28',
         'transport': 'ssl',
@@ -21,6 +21,7 @@ if __name__ == "__main__":
     #Add buzzer
     ct_gtw.add_actuator(CloudingThingsGroveBuzzer('buzzer'))
     #Add gas and smoke sensor
-    ct_gtw.add_sensor(CloudingThingsGroveGas('gas', period=5.0, pin=1))
+    ct_gtw.add_sensor(CloudingThingsGroveGas('gas', period=0.2, pin=8))
+    ct_gtw.add_sensor(CloudingThingsGroveFlame('flame', period=0.1, pin=7))
     #Start gateway
     ct_gtw.run()

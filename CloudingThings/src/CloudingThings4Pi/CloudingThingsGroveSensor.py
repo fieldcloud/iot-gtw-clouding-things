@@ -372,6 +372,23 @@ class CloudingThingsGrovePirMotion(CloudingThingsGroveSensor):
         return data
 
 
+class CloudingThingsGroveFlame(CloudingThingsGroveSensor):
+
+    '''Flame sensor'''
+
+    def _init_sensor(self):
+        try:
+            grovepi.pinMode(self._pin,"INPUT")
+        except:
+            pass
+
+
+    def _read(self):
+        data={}
+        data['flame']=grovepi.digitalRead(self._pin)
+        return data
+
+
 class CloudingThingsGroveDht(CloudingThingsGroveSensor):
 
     '''Dht Temperature & Humidity sensor'''

@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "CloudingThings4Pi",
-    version = "0.7.2",
+    version = "0.7.3",
 
     description = "Python library used to easily develop an IoT gateway "\
                   "based on RaspBerry Pi and Dexter Grove Pi sensor board "\
