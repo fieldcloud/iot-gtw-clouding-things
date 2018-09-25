@@ -6,8 +6,8 @@ from CloudingThings4Pi.CloudingThingsGroveActuator import *
 
 
 gtw_config={
-        'client': 'FieldCloud',
-        'serial': 'PiDemoFlcl_1',
+        'client': 'Put your organization name here',
+        'serial': 'Put your serial number here',
         'credential_file': '/home/pi/.ct/gtw_crt_file.crt',
         'broker': '5.135.83.28',
         'transport': 'ssl',
